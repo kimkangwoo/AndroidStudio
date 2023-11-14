@@ -8,6 +8,14 @@
     android:layout_margin="20dp"
     android:gravity="center_vertical"
     >
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="▶ 미션 설정 ◀"
+        android:layout_gravity="center"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        />
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -26,7 +34,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_margin="5dp"
-            android:text="토갱이\n실험용 텍스트 생성입니다. \nrecyclerview 연습입니다."
+            android:textSize="50dp"
+            android:text="토갱이"
             />
 
     </LinearLayout>
