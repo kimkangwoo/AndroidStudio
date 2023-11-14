@@ -10,7 +10,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-// wlstladmfh
+import android.widget.Toast;
+
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -22,7 +23,8 @@ public class MainActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                showalertdialog();
+                Toast.makeText(MainActivity.this, "클릭 성공", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -35,24 +37,15 @@ public class MainActivity extends AppCompatActivity {
         builder.setView(view);
         // Positive 및 Negative 버튼 등 다른 설정 추가 가능
 
+
         // AlertDialog 객체 생성
         AlertDialog alertDialog = builder.create();
+
+        // window 클릭 시 팝업 창 종료
+        if(alertDialog.getWindow() != null){
+            alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(0));
+        }
         alertDialog.show();
     }
-//  private void showCustomDialog(){
 
-//      AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-
-
-//      builder.setView(view);
-//      ((ImageView)view.findViewById(R.id.show_gif)).setImageDrawable(R.drawable.sample);
-//      ((TextView)view.findViewById(R.id.name_tex)).setText(name);
-//      ((TextView)view.findViewById(R.id.name_tex));
-
-//      if(alertDialog.getWindow() != null){
-//          alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(0));
-//      }
-
-//      alertDialog.show();
-//  }
 }
