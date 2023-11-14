@@ -10,7 +10,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
+// wlstladmfh
 public class MainActivity extends AppCompatActivity {
 
     @Override
