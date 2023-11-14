@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:id="@+id/layoutDialog"
+    android:layout_margin="20dp"
     android:gravity="center_vertical"
     >
     <LinearLayout
@@ -11,12 +14,14 @@
         android:orientation="horizontal"
         >
         <ImageView
+            android:id="@+id/show_gif"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/sample"
             android:layout_margin="5dp"
             />
         <TextView
+            android:id="@+id/name_tex"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -32,6 +37,7 @@
         android:layout_gravity="center"
         >
         <TextView
+            android:id="@+id/precaution"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="포유강 영장상목 토끼목 토끼과에 속하는 동물이다.[18][19] 긴 귀가 특징으로 앞다리보다 훨씬 긴 뒷다리를 이용하여 깡충깡충 뛰어다닌다. 솜뭉치 모양으로 위쪽으로 짧아 보이게 말려 있는 꼬리와 긴 꼬리로 일반적으로는 토끼과부터 토끼로 분류한다. 입과 코는 작으며, 입모양이 'ㅅ' 모양. 얼굴은 약간 달걀형에 가깝다. 눈의 색은 검은색이나 갈색, 푸른색 등이 있다.[20] 알비노 개체의 경우 붉은 눈을 지닌다.
