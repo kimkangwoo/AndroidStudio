@@ -16,8 +16,24 @@ public class Myadapter extends RecyclerView.Adapter<Myadapter.ViewHolder> {
     private ArrayList<String> localDataSet;
     // 데이터 리스트 및 생성자 선언
     public static class ViewHolder extends RecyclerView.ViewHolder{
-        public ViewHolder(@NonNull View itemView){
-            super(itemView);
+        private TextView name;
+        private TextView precausion;
+        private ImageView showGIF;
+        public ViewHolder(@NonNull View view){
+            super(view);
+
+            name = (TextView) view.findViewById(R.id.name_tex);
+            precausion = (TextView) view.findViewById(R.id.precaution);
+            showGIF = (ImageView) view.findViewById(R.id.show_gif);
+        }
+        public TextView getname(){
+            return name;
+        }
+        public TextView getPrecausion(){
+            return precausion;
+        }
+        public ImageView getShowGIF(){
+            return showGIF;
         }
     }
 
@@ -36,9 +52,11 @@ public class Myadapter extends RecyclerView.Adapter<Myadapter.ViewHolder> {
     }
 
     //ViewHolder안의 내용을 position에 해당되는 데이터로 교체
-    public void onBindViewHolder(@NonNull Myadapter.ViewHolder holder, int position){
+    public void onBindViewHolder(@NonNull Myadapter.ViewHolder holder, final int position){
+        holder.getname().setText(localDataSet.get(position).charAt(0));
+        holder.getPrecausion().setText(localDataSet.get(position).charAt(1));
+        holder.getShowGIF().setImageResource(localDataSet.get(position).charAt(2));
 
-        String text = localDataSet.get(position);
     }
 
     // 전체 데이터의 갯수를 리턴

@@ -1,12 +1,16 @@
 package com.example.test_a;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.work.Data;
 
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Adapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -16,18 +20,15 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
-    RecyclerView recyclerView;
+    private RecyclerView recyclerView;
+    Myadapter myadapter;
+    ArrayList<Data> datalist;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         Button button = (Button)findViewById(R.id.cat_btn);
-
-        ArrayList<String> testDataSet = new ArrayList<>();
-        for (int i = 0; i<20; i++) {
-            testDataSet.add("TEST DATA" + i);
-        }
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -38,8 +39,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
+        recyclerView.addItemDecoration(new DividerItemDecoration(getApplicationContext(), DividerItemDecoration.HORIZONTAL));
+        LinearLayoutManager linearLayoutManager= new LinearLayoutManager(this);
+        datalist = new ArrayList<>();
+        myadapter = new Adapter(datalist);
+        recyclerView.setAdapter(myadapter);
 
-
+        load();
     }
 
     private void showalertdialog(){
@@ -58,6 +65,12 @@ public class MainActivity extends AppCompatActivity {
             alertDialog.getWindow().setBackgroundDrawable(new ColorDrawable(0));
         }
         alertDialog.show();
+    }
+
+    void load(){
+        Data data = new Data("스쿼트", "주의 사항", R.drawable.sample);
+        datalist.add(0, data);
+        myadapter.notifyDataSetChanged();
     }
 
 }
