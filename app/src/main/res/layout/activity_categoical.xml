@@ -5,11 +5,12 @@
     android:layout_height="match_parent"
     android:orientation="horizontal">
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerviewView"
+        android:id="@+id/recyclerview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="20dp"
         android:layout_gravity="center">
+
 
     </androidx.recyclerview.widget.RecyclerView>
 
