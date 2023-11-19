@@ -10,6 +10,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+
 import java.util.ArrayList;
 
 public class Myadapter extends RecyclerView.Adapter<Myadapter.ViewHolder> {
@@ -27,7 +29,11 @@ public class Myadapter extends RecyclerView.Adapter<Myadapter.ViewHolder> {
             showGIF = (ImageView) view.findViewById(R.id.show_gif);
         }
         void onBind(category_item item){
-            showGIF.setImageResource(item.getImage());
+            // GIF 파일 실행
+            Glide.with(itemView.getContext())
+                    .asGif()
+                    .load(item.getImage()) // Assuming getImage() returns a URL or resource ID
+                    .into(showGIF);
             name.setText(item.getname());
             precausion.setText(item.getMissionText());
         }

@@ -51,7 +51,13 @@ public class MainActivity extends AppCompatActivity {
         if (recyclerView != null) {
             // 데이터 리스트
             ArrayList<category_item> dataList = new ArrayList<>();
-            dataList.add(new category_item(R.drawable.sample, "이름", "사용 방법 표시"));
+            dataList.add(new category_item(R.drawable.squat, "SQUAT",
+                    "1. 카메라를 몸 전체가 보이게 설치해주세요. \n" +
+                            "2. 두 다리를 11자 모양을 하고 어깨너비로 벌려주세요\n" +
+                            "3. 팔은 두손을 모아 가슴 앞에 두세요\n" +
+                            "4. 엉덩이를 낮추고 무릎을 굽히면서 90도까지 내려가세요\n" +
+                            "5. 허리를 세워 기본자세로 돌아오세요\n"
+            ));
             dataList.add(new category_item(R.drawable.sample, "이름", "사용 방법 표시"));
             dataList.add(new category_item(R.drawable.sample, "이름", "사용 방법 표시"));
 
