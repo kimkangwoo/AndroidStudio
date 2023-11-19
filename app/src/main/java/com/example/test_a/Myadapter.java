@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 public class Myadapter extends RecyclerView.Adapter<Myadapter.ViewHolder> {
-    private ArrayList<String> localDataSet;
+    private ArrayList<category_item> localDataSet = null;
     // 데이터 리스트 및 생성자 선언
     public static class ViewHolder extends RecyclerView.ViewHolder{
         private TextView name;
@@ -26,20 +26,12 @@ public class Myadapter extends RecyclerView.Adapter<Myadapter.ViewHolder> {
             precausion = (TextView) view.findViewById(R.id.precaution);
             showGIF = (ImageView) view.findViewById(R.id.show_gif);
         }
-        public TextView getname(){
-            return name;
+        void onBind(category_item item){
+            showGIF.setImageResource(item.getImage());
+            name.setText(item.getname());
+            precausion.setText(item.getMissionText());
         }
-        public TextView getPrecausion(){
-            return precausion;
-        }
-        public ImageView getShowGIF(){
-            return showGIF;
-        }
-    }
 
-    // 생성자
-    public Myadapter(ArrayList<String> dataSet){
-        localDataSet = dataSet;
     }
 
     // viewholder 객체를 생성하여 리턴한다.
@@ -53,14 +45,17 @@ public class Myadapter extends RecyclerView.Adapter<Myadapter.ViewHolder> {
 
     //ViewHolder안의 내용을 position에 해당되는 데이터로 교체
     public void onBindViewHolder(@NonNull Myadapter.ViewHolder holder, final int position){
-        holder.getname().setText(localDataSet.get(position).charAt(0));
-        holder.getPrecausion().setText(localDataSet.get(position).charAt(1));
-        holder.getShowGIF().setImageResource(localDataSet.get(position).charAt(2));
-
+        holder.onBind(localDataSet.get(position));
     }
 
     // 전체 데이터의 갯수를 리턴
     public int getItemCount(){
         return localDataSet.size();
     }
+
+    public void setLocalDataSet(ArrayList<category_item> list){
+        localDataSet = list;
+        notifyDataSetChanged();
+    }
+
 }
