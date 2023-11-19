@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 public class Myadapter extends RecyclerView.Adapter<Myadapter.ViewHolder> {
-    private ArrayList<category_item> localDataSet = null;
+    private ArrayList<category_item> localDataSet = new ArrayList<>();
     // 데이터 리스트 및 생성자 선언
     public static class ViewHolder extends RecyclerView.ViewHolder{
         private TextView name;
@@ -35,6 +35,8 @@ public class Myadapter extends RecyclerView.Adapter<Myadapter.ViewHolder> {
     }
 
     // viewholder 객체를 생성하여 리턴한다.
+    @NonNull
+    @Override
     public Myadapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.category_item, parent, false);
@@ -44,17 +46,22 @@ public class Myadapter extends RecyclerView.Adapter<Myadapter.ViewHolder> {
     }
 
     //ViewHolder안의 내용을 position에 해당되는 데이터로 교체
-    public void onBindViewHolder(@NonNull Myadapter.ViewHolder holder, final int position){
-        holder.onBind(localDataSet.get(position));
+    @Override
+    public void onBindViewHolder(@NonNull Myadapter.ViewHolder holder, int position){
+        if (localDataSet != null && position < localDataSet.size()) {
+            holder.onBind(localDataSet.get(position));
+        }
     }
 
     // 전체 데이터의 갯수를 리턴
+    @Override
     public int getItemCount(){
         return localDataSet.size();
     }
 
     public void setLocalDataSet(ArrayList<category_item> list){
-        localDataSet = list;
+        localDataSet.clear();
+        localDataSet.addAll(list);
         notifyDataSetChanged();
     }
 
