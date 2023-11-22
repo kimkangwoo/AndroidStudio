@@ -5,7 +5,6 @@
     android:orientation="vertical"
     android:gravity="center"
     >
-
     <TextView
         android:id="@+id/cnt_txt"
         android:text="pedometer"
@@ -17,6 +16,14 @@
         android:id="@+id/goal_txt"
         android:text="goal"
         android:textSize="30dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        />
+    <Button
+        android:id="@+id/set_btn"
+        android:text="reset"
+        android:textSize="30dp"
+        android:layout_marginTop="150dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         />
