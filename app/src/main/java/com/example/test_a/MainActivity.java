@@ -30,10 +30,11 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private SensorManager sensorManager;
     private Sensor stepCountSensor;
     int stepCount = 0; // 현재 걸음 수
-    private TextView countTV; private TextView goalTV;
+    private TextView countTV;
+    private TextView goalTV;
     private Button reset;
 
-    @RequiresApi(api= Build.VERSION_CODES.Q)
+    //@RequiresApi(api= Build.VERSION_CODES.Q)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,6 +42,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
         reset = findViewById(R.id.set_btn);
         countTV = findViewById(R.id.cnt_txt);
+        goalTV = findViewById(R.id.goal_txt);
         // - TYPE_STEP_DETECTOR:  리턴 값이 무조건 1, 앱이 종료되면 다시 0부터 시작
         // - TYPE_STEP_COUNTER : 앱 종료와 관계없이 계속 기존의 값을 가지고 있다가 1씩 증가한 값을 리턴
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
@@ -53,7 +55,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         }
 
         if(stepCountSensor == null){
-            Toast.makeText(this, "No Step Sensor", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "No Step Sensor", Toast.LENGTH_LONG).show();
         }
 
         reset.setOnClickListener(new View.OnClickListener() {
@@ -75,7 +77,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         if(stepCountSensor != null){
             sensorManager.registerListener(this,
                     stepCountSensor,
-                    SensorManager.SENSOR_DELAY_FASTEST);
+                    SensorManager.SENSOR_DELAY_UI);
         }
     }
 
@@ -84,12 +86,16 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     // 센서는 동작을 감지 하면 이벤트를 발생하여 onSensorChanged에 값을 전달합니다.
     @Override
     public void onSensorChanged(SensorEvent event){
-        Log.d("StepCounter", "Sensor event received");
+        Log.d("StepCounter", "Sensor event received : "+ event.sensor.getType() +"/" +Sensor.TYPE_STEP_DETECTOR+"/"+ event.values[0] + "/"+Sensor.TYPE_STEP_COUNTER);
         if(event.sensor.getType() == Sensor.TYPE_STEP_COUNTER){
-            if(event.values[0]==1.f){
-                stepCount++;
                 countTV.setText(String.valueOf(stepCount));
-            }
+                goalTV.setText(String.valueOf(event.values[0]));
+                stepCount++;
+        }
+        if(event.sensor.getType() == Sensor.TYPE_STEP_DETECTOR){
+            countTV.setText(String.valueOf(stepCount));
+            goalTV.setText(String.valueOf(event.values[0]));
+            stepCount++;
         }
     }
 
