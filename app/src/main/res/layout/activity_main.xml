@@ -4,27 +4,34 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center"
+    android:background="#000000"
     >
     <TextView
         android:id="@+id/cnt_txt"
         android:text="pedometer"
-        android:textSize="30dp"
+        android:textSize="50dp"
+        android:textColor="#FFFFFF"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         />
     <TextView
         android:id="@+id/goal_txt"
         android:text="goal"
-        android:textSize="30dp"
+        android:textSize="50dp"
+        android:textColor="#FFFFFF"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         />
     <Button
         android:id="@+id/set_btn"
-        android:text="reset"
-        android:textSize="30dp"
+        android:text="↺"
+        android:textSize="70dp"
+        android:textColor="#FF00DD9B"
+        android:textStyle="bold"
         android:layout_marginTop="150dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:padding="20dp"
         />
 </LinearLayout>
