@@ -69,13 +69,17 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 permission.RECEIVE_BOOT_COMPLETED) == PackageManager.PERMISSION_DENIED){
             requestPermissions(new String[]{Manifest.permission.RECEIVE_BOOT_COMPLETED}, 0);
         }
+        if(ContextCompat.checkSelfPermission(this, Manifest.
+                permission.FOREGROUND_SERVICE) == PackageManager.PERMISSION_DENIED){
+            requestPermissions(new String[]{Manifest.permission.FOREGROUND_SERVICE}, 0);
+        }
         // time set line ---------------------------------------------------------------------------
 
         // 코드 실행 시간 설정
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
         //  00:00
-        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.HOUR_OF_DAY, 24);
         calendar.set(Calendar.MINUTE, 0);
 
         // Create an Intent for your BroadcastReceiver
@@ -90,17 +94,20 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         alarmManager.set(AlarmManager.RTC, calendar.getTimeInMillis(), pendingIntent);
 
         // method ----------------------------------------------------------------------------------
+
         if(stepCountSensor == null){
             Toast.makeText(this, "No Step Sensor", Toast.LENGTH_LONG).show();
         }
 
-        MyReceiver __ = new MyReceiver(countTV);
+        // 앱 종료시 횟수 카운트
+        startMyService(this);
+
         reset.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 // 리셋 버튼
                 StepCountPreferenceHelper.saveStepCount(MainActivity.this, 0);
-                countTV.setText(String.valueOf("오늘 걸은 횟수 : "+0));
+                countTV.setText(String.valueOf("오늘 걸음 : "+0));
 ;
             }
         });
@@ -113,32 +120,15 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     // - SENSOR_DELAY_FASTEST: 딜레이 없음
     public void onStart(){
         super.onStart();
-        if(stepCountSensor != null){
-            sensorManager.registerListener(this,
-                    stepCountSensor, SensorManager.SENSOR_DELAY_GAME);
-        }
-    }
-    public void onPause(){
-        super.onPause();
         if(sensorManager != null) {
             sensorManager.registerListener(this,
                     stepCountSensor, SensorManager.SENSOR_DELAY_GAME);
-            }
-        }
-    @Override
-    public void onResume(){
-        super.onResume();
-        if(sensorManager != null){
-            sensorManager.registerListener(this,
-                    stepCountSensor, SensorManager.SENSOR_DELAY_GAME);
         }
     }
-    public void onStop(){
-        super.onStop();
-        if(sensorManager != null){
-            sensorManager.registerListener(this,
-                    stepCountSensor, SensorManager.SENSOR_DELAY_GAME);
-        }
+    // MyService 실행
+    public static void startMyService(Context context) {
+        Intent serviceIntent = new Intent(context, MyService.class);
+        context.startService(serviceIntent);
     }
 
     // 센서 이벤트 리스너 메소드
@@ -153,8 +143,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 StepCountPreferenceHelper.saveStepCount(this, (int) event.values[0]);
             }
             mstepCount = (int) event.values[0] - stepCount;
-            goalTV.setText(String.valueOf("총 걸은 횟수 : "+event.values[0]));
-            countTV.setText(String.valueOf("오늘 걸은 횟수 : "+mstepCount));
+            goalTV.setText(String.valueOf("총 걸음 : "+event.values[0]));
+            countTV.setText(String.valueOf("오늘 걸음 : "+mstepCount));
         }
     }
 

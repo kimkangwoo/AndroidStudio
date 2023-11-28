@@ -24,20 +24,19 @@ public class MyReceiver extends BroadcastReceiver {
      * 활동이나 서비스를 시작하거나 애플리케이션의 다른 부분이나 다른 애플리케이션에 메시지를 브로드캐스트하는데 사용
      **/
     private TextView count;
-    public MyReceiver() {
-    }
+
     public MyReceiver(TextView count){
         this.count = count;
     }
+
     @Override
     public void onReceive(Context context, Intent intent) {
         // 지정된 시간에 적용할 알고리즘 작성
-        Log.d("my receiver", "만보계 카운트 초기화 성공");
+        Log.d("my receiver", "만보계 카운트 초기화 실행 됨");
         resetCounts(context);
         if (count != null) {
             count.setText("0");
         }
-
     }
 
     private void resetCounts(Context context) {
@@ -53,7 +52,6 @@ public class MyReceiver extends BroadcastReceiver {
         // Update the UI (you may want to send a broadcast or use other mechanisms to update the UI in your activity)
         Intent updateIntent = new Intent("STEP_COUNT_UPDATED");
         LocalBroadcastManager.getInstance(context).sendBroadcast(updateIntent);
-
 
     }
 }
