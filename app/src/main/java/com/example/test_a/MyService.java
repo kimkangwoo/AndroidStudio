@@ -1,21 +1,30 @@
 package com.example.test_a;
 
+import android.Manifest;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Build;
 import android.os.IBinder;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.RelativeSizeSpan;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 
 public class MyService extends Service implements SensorEventListener {
 
@@ -50,7 +59,17 @@ public class MyService extends Service implements SensorEventListener {
     @Override
     public void onTaskRemoved(Intent rootIntent) {
         Log.e("Error", "onTaskRemoved - 강제 종료 " + rootIntent);
-        stopSelf(); //서비스 종료
+    }
+
+    private void createNotificationChannel() {
+        // Android 8.0 이상에서는 Notification Channel을 생성하여 설정해야 합니다.
+        NotificationChannel channel = new NotificationChannel(
+                "stepForeground",
+                "Foreground Service Channel",
+                NotificationManager.IMPORTANCE_DEFAULT
+        );
+        NotificationManager manager = getSystemService(NotificationManager.class);
+        manager.createNotificationChannel(channel);
     }
 
     private Notification createNotification() {
@@ -59,21 +78,48 @@ public class MyService extends Service implements SensorEventListener {
         // NotificationManagerCompat을 사용하여 Notification을 보낼 수 있음
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "stepForeground");
 
-        builder.setContentTitle("MissionAlarm")
-                .setContentText("당신의 도보를 측정중 입니다.")
-                .setSmallIcon(R.drawable.stepimage)
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+        // Android 8.0 이상에서는 Notification Channel을 생성하여 설정해야 합니다.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            createNotificationChannel();
+        }
+
+
+        // 알림을 탭했을 때 앱을 열도록 Intent 설정
+        Intent notificationIntent = new Intent(this, MainActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0,
+                notificationIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_MUTABLE);
+
+        builder.setContentTitle("MissionAlarm                                        ")
+                .setContentText("오늘의 걸음 : ")
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setContentIntent(pendingIntent)
+                .setOngoing(true)
+                .setOnlyAlertOnce(true)
+                .setSmallIcon(R.drawable.stepimage);
+
+        // Notification을 반환
+        return builder.build();
+    }
+
+    private void updateNotification(int stepCount) {
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
 
         // Android 8.0 이상에서는 Notification Channel을 생성하여 설정해야 합니다.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel channel = new NotificationChannel(
-                    "stepForeground",
-                    "Foreground Service Channel",
-                    NotificationManager.IMPORTANCE_DEFAULT
-            );
-            NotificationManager manager = getSystemService(NotificationManager.class);
-            manager.createNotificationChannel(channel);
+            createNotificationChannel();
         }
+
+        // 알림을 생성하거나 업데이트합니다.
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "stepForeground")
+                .setContentTitle("MissionAlarm                                        ")
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setOngoing(true)
+                .setOnlyAlertOnce(true)
+                .setSmallIcon(R.drawable.stepimage);
+
+        // 알림 내용에 업데이트된 걸음 수를 설정합니다.
+        builder.setContentText("오늘의 걸음: "+stepCount);
 
         // 알림을 탭했을 때 앱을 열도록 Intent 설정
         Intent notificationIntent = new Intent(this, MainActivity.class);
@@ -82,9 +128,28 @@ public class MyService extends Service implements SensorEventListener {
                 PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_MUTABLE);
         builder.setContentIntent(pendingIntent);
 
-        // Notification을 반환
-        return builder.build();
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.FOREGROUND_SERVICE)
+                == PackageManager.PERMISSION_GRANTED) {
+            notificationManager.notify(1, builder.build());
+        }
     }
+
+    private String span(String cc){
+        // 텍스트에 적용할 스타일을 설정
+        SpannableString spannableText = new SpannableString(cc);
+
+        // 텍스트의 색상을 변경하는 스팬을 적용
+        ForegroundColorSpan colorSpan = new ForegroundColorSpan(Color.RED);
+        spannableText.setSpan(colorSpan, 0, spannableText.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        // 텍스트의 크기를 변경하는 스팬을 적용
+        RelativeSizeSpan sizeSpan = new RelativeSizeSpan(1.5f); // 텍스트 크기를 1.5배로 변경
+        spannableText.setSpan(sizeSpan, 0, spannableText.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        return cc;
+    }
+
 
     private void registerSensorListener() {
         // 걸음 센서를 위한 기본 센서 가져오기
@@ -93,6 +158,7 @@ public class MyService extends Service implements SensorEventListener {
         // 센서 리스너 등록
         if (stepSensor != null) {
             sensorManager.registerListener(this, stepSensor, SensorManager.SENSOR_DELAY_GAME);
+
         } else {
             // 걸음 센서를 사용할 수 없는 경우 처리
         }
@@ -102,6 +168,11 @@ public class MyService extends Service implements SensorEventListener {
     public void onSensorChanged(SensorEvent event) {
         if (event.sensor.getType() == Sensor.TYPE_STEP_COUNTER) {
             // 걸음 수 변경에 대한 기존 로직
+            // 측정된 걸음 수 가져오기
+            int stepCount = (int) event.values[0]-StepCountPreferenceHelper.getStepCount(this);
+
+            // Notification 업데이트
+            updateNotification(stepCount);
         }
     }
 
@@ -113,8 +184,8 @@ public class MyService extends Service implements SensorEventListener {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        // 서비스가 파괴될 때 센서 리스너 등록 해제
-        Log.d("MyService", "onDestroy");
-        sensorManager.unregisterListener(this);
+        Log.d("onDestroy", "삭제됨 얍알");
+
+        startForeground(1, createNotification());
     }
 }

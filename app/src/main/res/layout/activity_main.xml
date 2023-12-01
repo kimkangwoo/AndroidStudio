@@ -3,35 +3,77 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:gravity="center"
     android:background="#000000"
+    android:gravity="center"
     >
-    <TextView
-        android:id="@+id/cnt_txt"
-        android:text="pedometer"
-        android:textSize="50dp"
-        android:textColor="#FFFFFF"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        />
-    <TextView
-        android:id="@+id/goal_txt"
-        android:text="goal"
-        android:textSize="50dp"
-        android:textColor="#FFFFFF"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        />
-    <Button
-        android:id="@+id/set_btn"
-        android:text="↺"
-        android:textSize="70dp"
-        android:textColor="#FF00DD9B"
-        android:textStyle="bold"
-        android:layout_marginTop="150dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
-        android:padding="20dp"
-        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="350dp"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:background="@drawable/edge"
+        android:layout_marginBottom="30dp"
+        android:paddingTop="80dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginLeft="15dp"
+        >
+        <TextView
+            android:id="@+id/cnt_txt"
+            android:text="pedometer"
+            android:textSize="50dp"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            />
+        <TextView
+            android:text="Steps"
+            android:textSize="50dp"
+            android:textColor="#733A3939"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:orientation="horizontal"
+        android:gravity="bottom"
+        android:layout_marginRight="15dp"
+        android:layout_marginLeft="15dp">
+        <TextView
+            android:text="Cal."
+            android:textSize="35dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            />
+        <TextView
+            android:id="@+id/stepcal"
+            android:text="00.0"
+            android:textSize="30dp"
+            android:textColor="#CCFFFFFF"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="40dp"
+            />
+        <TextView
+            android:text="Time : "
+            android:textSize="35dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            />
+        <TextView
+            android:id="@+id/steptime"
+            android:text="00 : 00"
+            android:textSize="30dp"
+            android:textColor="#CCFFFFFF"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            />
+    </LinearLayout>
+
+
 </LinearLayout>

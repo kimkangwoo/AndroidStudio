@@ -1,7 +1,6 @@
 package com.example.test_a;
 
 
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
@@ -18,16 +17,18 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 
-import android.os.Build;
 import android.os.Bundle;
 
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.nio.file.AtomicMoveNotSupportedException;
 import java.util.Calendar;
+import java.util.concurrent.TimeUnit;
 
 // 만보기 제작
 
@@ -39,22 +40,26 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private int stepCount;
     private int mstepCount;// 현재 걸음 수
     protected TextView countTV;
-    private TextView goalTV;
-    private Button reset;
-
+    private TextView time;
+    private TextView cal;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        reset = findViewById(R.id.set_btn);
         countTV = findViewById(R.id.cnt_txt);
-        goalTV = findViewById(R.id.goal_txt);
+        time = findViewById(R.id.steptime);
+        cal = findViewById(R.id.stepcal);
+
         // - TYPE_STEP_DETECTOR:  리턴 값이 무조건 1, 앱이 종료되면 다시 0부터 시작
         // - TYPE_STEP_COUNTER : 앱 종료와 관계없이 계속 기존의 값을 가지고 있다가 1씩 증가한 값을 리턴
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         stepCountSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
+
+
+        // 앱 종료시 횟수 카운트
+        startMyService(this);
 
         // permission line -------------------------------------------------------------------------
         if(ContextCompat.checkSelfPermission(this, Manifest.
@@ -72,6 +77,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         if(ContextCompat.checkSelfPermission(this, Manifest.
                 permission.FOREGROUND_SERVICE) == PackageManager.PERMISSION_DENIED){
             requestPermissions(new String[]{Manifest.permission.FOREGROUND_SERVICE}, 0);
+        }
+        if(ContextCompat.checkSelfPermission(this, Manifest.
+                permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_DENIED){
+            requestPermissions(new String[]{Manifest.permission.POST_NOTIFICATIONS}, 0);
         }
         // time set line ---------------------------------------------------------------------------
 
@@ -99,19 +108,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             Toast.makeText(this, "No Step Sensor", Toast.LENGTH_LONG).show();
         }
 
-        // 앱 종료시 횟수 카운트
-        startMyService(this);
-
-        reset.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // 리셋 버튼
-                StepCountPreferenceHelper.saveStepCount(MainActivity.this, 0);
-                countTV.setText(String.valueOf("오늘 걸음 : "+0));
-;
-            }
-        });
-
     }//----------------------------<onCreate>-------------------------------------------------------
 
     // - SENSOR_DELAY_NORMAL: 20,000 초 딜레이
@@ -125,6 +121,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                     stepCountSensor, SensorManager.SENSOR_DELAY_GAME);
         }
     }
+
     // MyService 실행
     public static void startMyService(Context context) {
         Intent serviceIntent = new Intent(context, MyService.class);
@@ -142,10 +139,15 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 // Save the updated step count to SharedPreferences
                 StepCountPreferenceHelper.saveStepCount(this, (int) event.values[0]);
             }
+
             mstepCount = (int) event.values[0] - stepCount;
-            goalTV.setText(String.valueOf("총 걸음 : "+event.values[0]));
-            countTV.setText(String.valueOf("오늘 걸음 : "+mstepCount));
+            countTV.setText(String.valueOf(mstepCount));
+            cal.setText(String.format("%.2f", mstepCount*0.05));
+            time.setText(String.valueOf(StepCountPreferenceHelper.getStepTime(this)%3600)+
+                    ":"+String.valueOf(StepCountPreferenceHelper.getStepTime(this)%60));
         }
+
+
     }
 
     // no return
@@ -157,6 +159,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 class StepCountPreferenceHelper {
     private static final String PREF_NAME = "StepCountPreferences";
     private static final String KEY_STEP_COUNT = "stepCount";
+    private static final String KEY_STEP_TIME = "stepTime";
 
     public static void saveStepCount(Context context, int stepCount) {
         SharedPreferences preferences = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
@@ -164,9 +167,19 @@ class StepCountPreferenceHelper {
         editor.putInt(KEY_STEP_COUNT, stepCount);
         editor.apply();
     }
+    public static void saveStepTime(Context context, int time) {
+        SharedPreferences preferences = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putInt(KEY_STEP_TIME, time);
+        editor.apply();
+    }
 
     public static int getStepCount(Context context) {
         SharedPreferences preferences = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
         return preferences.getInt(KEY_STEP_COUNT, 0);
+    }
+    public static int getStepTime(Context context) {
+        SharedPreferences preferences = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+        return preferences.getInt(KEY_STEP_TIME, 0);
     }
 }
