@@ -29,7 +29,7 @@ import androidx.core.app.NotificationManagerCompat;
 public class MyService extends Service implements SensorEventListener {
 
     private SensorManager sensorManager;
-
+    private int stepCount;
     @Override
     public void onCreate() {
         super.onCreate();
@@ -91,7 +91,7 @@ public class MyService extends Service implements SensorEventListener {
                 PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_MUTABLE);
 
         builder.setContentTitle("MissionAlarm                                        ")
-                .setContentText("오늘의 걸음 : ")
+                .setContentText("오늘의 걸음 : "+stepCount)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setContentIntent(pendingIntent)
                 .setOngoing(true)
@@ -169,7 +169,7 @@ public class MyService extends Service implements SensorEventListener {
         if (event.sensor.getType() == Sensor.TYPE_STEP_COUNTER) {
             // 걸음 수 변경에 대한 기존 로직
             // 측정된 걸음 수 가져오기
-            int stepCount = (int) event.values[0]-StepCountPreferenceHelper.getStepCount(this);
+            stepCount = (int) event.values[0]-StepCountPreferenceHelper.getStepCount(this);
 
             // Notification 업데이트
             updateNotification(stepCount);
