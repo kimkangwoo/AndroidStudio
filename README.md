@@ -11,3 +11,6 @@
 
 감사합니다.
 >Thank you.
+
+* 상단에 파일은 제작중인 프로젝트 참고용 파일입니다.
+* The file at the top is a reference file for the project in production.
