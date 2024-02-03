@@ -1,4 +1,5 @@
-<img src="https://img.shields.io/badge/androidstudio-3DDC84?style=flat-flat-square&logo=androidstudio&logoColor=white"/>
+<img src="https://img.shields.io/badge/androidstudio-3DDC84?style=flat-flat-square&logo=androidstudio&logoColor=white"/><img src="https://img.shields.io/badge/openjdk-437291?style=flat-flat-square&logo=openjdk&logoColor=white"/>
+
 
 # TEST_A
 
